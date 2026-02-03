@@ -663,6 +663,12 @@ function App() {
             onToggleWidgetEnabled={toggleWidgetEnabled}
             onClose={() => setShowSettings(false)}
             onResetPositions={resetWidgetPositions}
+            onDriveConnected={() => {
+              storage.setAdapter(googleDriveAdapter);
+              setNeedsDriveAuth(false);
+              loadData();
+              alert("Connected! Syncing data...");
+            }}
           />
         )
       }

@@ -15,7 +15,7 @@ const WIDGET_CONFIG = [
   { id: 'focusprep', label: 'Focus Prep', icon: Timer, shortcut: '7' },
 ];
 
-export default function SettingsPanel({ settings, enabledWidgets, todoistConfig, onUpdateSettings, onUpdateTodoistConfig, onToggleWidgetEnabled, onClose, onResetPositions }) {
+export default function SettingsPanel({ settings, enabledWidgets, todoistConfig, onUpdateSettings, onUpdateTodoistConfig, onToggleWidgetEnabled, onClose, onResetPositions, onDriveConnected }) {
   const [tokenInput, setTokenInput] = useState(todoistConfig?.token || '');
   const [isConnecting, setIsConnecting] = useState(false);
   const [connectionError, setConnectionError] = useState('');
@@ -237,10 +237,8 @@ export default function SettingsPanel({ settings, enabledWidgets, todoistConfig,
                       try {
                         const connected = await googleDriveAdapter.connect();
                         if (connected) {
-                          storage.setAdapter(googleDriveAdapter);
-                          // Force re-render/reload logic here or via parent
-                          if (confirm('Connected to Google Drive! Click OK to reload and sync your data.')) {
-                            window.location.reload();
+                          if (onDriveConnected) {
+                            onDriveConnected();
                           }
                         }
                       } catch (err) {
@@ -745,7 +743,7 @@ export default function SettingsPanel({ settings, enabledWidgets, todoistConfig,
             pointer-events: none;
           }
         `}</style>
-      </div>
-    </div>
+      </div >
+    </div >
   );
 }
