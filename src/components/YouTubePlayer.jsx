@@ -38,7 +38,7 @@ export default function YouTubePlayer({ videoId, isPlaying, volume, isMuted, onS
 
     // Handle playing state
     useEffect(() => {
-        if (playerRef.current && playerRef.current.getPlayerState) {
+        if (playerRef.current && typeof playerRef.current.getPlayerState === 'function') {
             const state = playerRef.current.getPlayerState();
             if (isPlaying && state !== window.YT.PlayerState.PLAYING) {
                 playerRef.current.playVideo();
@@ -50,14 +50,14 @@ export default function YouTubePlayer({ videoId, isPlaying, volume, isMuted, onS
 
     // Handle volume changes
     useEffect(() => {
-        if (playerRef.current && playerRef.current.setVolume) {
+        if (playerRef.current && typeof playerRef.current.setVolume === 'function') {
             playerRef.current.setVolume(volume);
         }
     }, [volume]);
 
     // Handle mute changes
     useEffect(() => {
-        if (playerRef.current) {
+        if (playerRef.current && typeof playerRef.current.mute === 'function') {
             if (isMuted) {
                 playerRef.current.mute();
             } else {
@@ -85,7 +85,8 @@ export default function YouTubePlayer({ videoId, isPlaying, volume, isMuted, onS
                 'modestbranding': 1,
                 'rel': 0,
                 'showinfo': 0,
-                'autoplay': isPlaying ? 1 : 0
+                'autoplay': isPlaying ? 1 : 0,
+                'origin': window.location.origin
             },
             events: {
                 'onReady': onPlayerReady,
