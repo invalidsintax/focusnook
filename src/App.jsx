@@ -427,7 +427,7 @@ function App() {
   if (isLoading) {
     return (
       <div className="app-loading">
-        <DebugOverlay />
+
         <Loader size={48} className="animate-spin" />
         <p>Loading your space...</p>
         <style>{`
@@ -457,7 +457,7 @@ function App() {
   if (needsDriveAuth) {
     return (
       <div className="app-loading">
-        <DebugOverlay />
+
         <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
           <Music size={48} />
           <h2>Welcome back!</h2>
@@ -508,7 +508,7 @@ function App() {
 
   return (
     <div className="app">
-      <DebugOverlay />
+
       {/* Video Background */}
       <VideoBackground youtubeId={currentSpace.youtubeId} />
 
