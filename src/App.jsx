@@ -157,7 +157,19 @@ function App() {
   useEffect(() => {
     const init = async () => {
       // Initialize storage adapter preference
-      const storageType = localStorage.getItem('focusnook-storage-type');
+      let storageType = localStorage.getItem('focusnook-storage-type');
+
+      // RECOVERY: If no type set, but we have a valid token, assume Drive
+      if (!storageType) {
+        const token = localStorage.getItem('gdrive_token');
+        const expiry = localStorage.getItem('gdrive_expiry');
+        if (token && expiry && Number(expiry) > Date.now()) {
+          console.log("Recovering lost storage type based on existing token");
+          storageType = 'gdrive';
+          localStorage.setItem('focusnook-storage-type', 'gdrive');
+        }
+      }
+
       if (storageType === 'gdrive') {
         try {
           // Initialize scripts
