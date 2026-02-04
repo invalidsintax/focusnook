@@ -15,7 +15,7 @@ const WIDGET_CONFIG = [
   { id: 'focusprep', label: 'Focus Prep', icon: Timer, shortcut: '7' },
 ];
 
-export default function SettingsPanel({ settings, enabledWidgets, todoistConfig, onUpdateSettings, onUpdateTodoistConfig, onToggleWidgetEnabled, onClose, onResetPositions, onDriveConnected }) {
+export default function SettingsPanel({ settings, enabledWidgets, todoistConfig, onUpdateSettings, onUpdateTodoistConfig, onToggleWidgetEnabled, onClose, onResetPositions, onDriveConnected, storageType }) {
   const [tokenInput, setTokenInput] = useState(todoistConfig?.token || '');
   const [isConnecting, setIsConnecting] = useState(false);
   const [connectionError, setConnectionError] = useState('');
@@ -221,12 +221,12 @@ export default function SettingsPanel({ settings, enabledWidgets, todoistConfig,
             <div className="integration-item">
               <div className="integration-header">
                 <span className="integration-name">Google Drive</span>
-                <span className={`connection-status ${storage.getType() === 'gdrive' ? 'connected' : ''}`}>
-                  {storage.getType() === 'gdrive' ? 'Connected' : 'Not connected'}
+                <span className={`connection-status ${storageType === 'gdrive' ? 'connected' : ''}`}>
+                  {storageType === 'gdrive' ? 'Connected' : 'Not connected'}
                 </span>
               </div>
 
-              {storage.getType() !== 'gdrive' ? (
+              {storageType !== 'gdrive' ? (
                 <>
                   <p className="integration-description">
                     Connect Google Drive to sync your settings and data across devices.

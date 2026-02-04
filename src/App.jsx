@@ -21,6 +21,7 @@ import { googleDriveAdapter, loadGoogleScripts } from './services/googleDrive';
 function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [needsDriveAuth, setNeedsDriveAuth] = useState(false);
+  const [storageType, setStorageType] = useState('local'); // Track storage type reactively
 
   // Load custom spaces
   const [customSpaces, setCustomSpaces] = useState([]);
@@ -180,6 +181,7 @@ function App() {
           if (restored) {
             console.log('Drive session restored from cache');
             storage.setAdapter(googleDriveAdapter);
+            setStorageType('gdrive');
             loadData();
           } else {
             // We need fresh auth
@@ -676,6 +678,7 @@ function App() {
             settings={settings}
             enabledWidgets={enabledWidgets}
             todoistConfig={todoistConfig}
+            storageType={storageType}
             onUpdateSettings={updateSettings}
             onUpdateTodoistConfig={updateTodoistConfig}
             onToggleWidgetEnabled={toggleWidgetEnabled}
@@ -685,6 +688,7 @@ function App() {
               // Explicitly save the type FIRST
               localStorage.setItem('focusnook-storage-type', 'gdrive');
               storage.setAdapter(googleDriveAdapter);
+              setStorageType('gdrive');
               setNeedsDriveAuth(false);
               loadData();
               alert("Connected! Data will sync automatically.");
