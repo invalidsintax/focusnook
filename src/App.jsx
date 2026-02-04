@@ -652,6 +652,20 @@ function App() {
             isPlaying={musicState.isPlaying}
             volume={musicState.volume ?? 50}
             isMuted={musicState.isMuted ?? false}
+            onStateChange={(state) => {
+              // Sync player state with app state to ensuring UI reflects reality
+              // 1 = Playing
+              const isPlaying = state === 1;
+              // 2 = Paused, 0 = Ended
+              const isPausedOrEnded = state === 2 || state === 0;
+
+              if (isPlaying && !musicState.isPlaying) {
+                setMusicState(prev => ({ ...prev, isPlaying: true }));
+              }
+              if (isPausedOrEnded && musicState.isPlaying) {
+                setMusicState(prev => ({ ...prev, isPlaying: false }));
+              }
+            }}
           />
         </div>
       )}

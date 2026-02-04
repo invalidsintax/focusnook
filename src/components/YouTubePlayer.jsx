@@ -106,6 +106,14 @@ export default function YouTubePlayer({ videoId, isPlaying, volume, isMuted, onS
 
         if (isPlaying) {
             event.target.playVideo();
+            // Retry once after a short delay to overcome potential race conditions or browser throttling
+            setTimeout(() => {
+                const state = event.target.getPlayerState();
+                if (state !== 1 && state !== 3) { // If not playing or buffering
+                    console.log("Retrying auto-play...");
+                    event.target.playVideo();
+                }
+            }, 1000);
         }
     };
 
