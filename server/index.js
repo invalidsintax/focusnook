@@ -3,6 +3,7 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import { startAuth, authCallback, authSession, authLogout } from './routes/auth.js';
 import { getDriveData, saveDriveDataRoute } from './routes/drive.js';
+import { proxyTodoist } from './routes/todoist.js';
 
 const app = express();
 app.use(cookieParser());
@@ -18,8 +19,8 @@ app.use((req, res, next) => {
   if (origin && allowedOrigins.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
     res.setHeader('Access-Control-Allow-Credentials', 'true');
-    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Todoist-Token');
     res.setHeader('Vary', 'Origin');
   }
 
@@ -39,6 +40,9 @@ app.post('/api/auth/logout', authLogout);
 
 app.get('/api/drive/data', getDriveData);
 app.post('/api/drive/data', saveDriveDataRoute);
+
+// Todoist proxy – forwards all methods to api.todoist.com server-side
+app.all('/api/todoist/*', proxyTodoist);
 
 const port = process.env.PORT || 8787;
 app.listen(port, () => {

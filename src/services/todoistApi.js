@@ -3,7 +3,8 @@
  * Handles all interactions with the Todoist REST API v2
  */
 
-const API_BASE = 'https://api.todoist.com/rest/v2';
+// All requests go through our Express proxy to avoid Todoist's CORS restriction
+const API_BASE = `${import.meta.env.VITE_API_BASE_URL ?? '/api'}/todoist`;
 
 /**
  * Make an authenticated request to the Todoist API
@@ -12,7 +13,8 @@ async function request(endpoint, token, options = {}) {
     const response = await fetch(`${API_BASE}${endpoint}`, {
         ...options,
         headers: {
-            'Authorization': `Bearer ${token}`,
+            // Proxy reads this header and forwards it as Authorization to Todoist
+            'X-Todoist-Token': token,
             'Content-Type': 'application/json',
             ...options.headers,
         },
