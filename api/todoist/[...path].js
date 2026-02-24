@@ -6,7 +6,7 @@
  * This function forwards it server-side as an Authorization header.
  */
 
-const TODOIST_BASE = 'https://api.todoist.com/rest/v2';
+const TODOIST_BASE = 'https://api.todoist.com/api/v1';
 
 export default async function handler(req, res) {
     // Never cache API proxy responses

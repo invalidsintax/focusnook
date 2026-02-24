@@ -1,6 +1,6 @@
 /**
  * Todoist API Service
- * Handles all interactions with the Todoist REST API v2
+ * Handles all interactions with the Todoist REST API v1
  */
 
 // Use a relative path so requests always go to the same origin on Vercel.
@@ -64,12 +64,14 @@ export async function validateToken(token) {
  * Get all projects for the user
  */
 export async function getProjects(token) {
-    const projects = await request('/projects', token);
+    const data = await request('/projects', token);
+    // v1 API returns { results: [...], next_cursor }
+    const projects = Array.isArray(data) ? data : (data.results ?? []);
     return projects.map(project => ({
         id: project.id,
         name: project.name,
         color: project.color,
-        isInbox: project.is_inbox_project,
+        isInbox: project.inbox_project ?? false,
     }));
 }
 
@@ -107,11 +109,14 @@ export async function getTasks(token, options = {}) {
         endpoint += `?${queryString}`;
     }
 
-    const tasks = await request(endpoint, token);
+    const data = await request(endpoint, token);
+    // v1 API returns { results: [...], next_cursor }
+    const tasks = Array.isArray(data) ? data : (data.results ?? []);
     return tasks.map(task => ({
         id: task.id,
         text: task.content,
-        completed: task.is_completed || false,
+        // v1 uses 'checked', v2 used 'is_completed'
+        completed: task.checked ?? task.is_completed ?? false,
         todoistId: task.id,
         projectId: task.project_id,
         due: task.due,

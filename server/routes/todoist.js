@@ -4,7 +4,7 @@
  * The client sends the Todoist token in the X-Todoist-Token header.
  */
 
-const TODOIST_BASE = 'https://api.todoist.com/rest/v2';
+const TODOIST_BASE = 'https://api.todoist.com/api/v1';
 
 async function proxyTodoist(req, res) {
     const token = req.headers['x-todoist-token'];
